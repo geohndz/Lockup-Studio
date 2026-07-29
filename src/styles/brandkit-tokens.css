@@ -1,0 +1,104 @@
+/* Lockup Studio — design tokens
+   Soft / padded / borderless. No strokes, no hard shadows, no gradients on chrome.
+   Neutral ramp inherited from the app's globals.css; greys raised to meet WCAG AA. */
+
+:root {
+  /* Surfaces — three levels only: field, card, tile */
+  --bk-field: #EEEEEE;          /* page background */
+  --bk-card: #FFFFFF;           /* card surface */
+  --bk-tile: #F3F3F3;           /* inset preview / group surface */
+  --bk-tile-2: #E8E8E8;         /* empty or disabled tile */
+  --bk-dark: #141414;           /* dark card (white-variant previews) */
+  --bk-hairline: #E0E0E0;       /* only divider allowed */
+
+  /* Text — hierarchy by size + weight, never by unreadable grey */
+  --bk-ink: #0A0A0A;            /* 19.6:1 on card */
+  --bk-ink-2: #5F5F5F;          /* 6.5:1 — labels on tiles */
+  --bk-ink-3: #6B6B6B;          /* 5.4:1 — secondary body, min for text */
+  --bk-ink-disabled: #767676;   /* 4.6:1 */
+  --bk-on-dark: #FFFFFF;
+  --bk-on-dark-2: rgba(255, 255, 255, 0.76);
+  --bk-on-dark-3: rgba(255, 255, 255, 0.68);
+
+  /* Accent — lime marks the new/optional deliverable, nothing else */
+  --bk-accent: #CBF94F;
+  --bk-accent-ink: #0A0A0A;
+
+  /* Demo brand palette (project data, not chrome) */
+  --bk-brand-primary: #16463A;
+  --bk-brand-secondary: #EDE6D6;
+  --bk-brand-tertiary: #C2410C;
+  --bk-brand-tint: #DEE7E4;     /* primary mixed toward white, for mock chrome */
+
+  /* Type — Helvena + Geist Mono (Next font vars when available) */
+  --bk-font-sans: var(--font-helvena), Helvena, ui-sans-serif, system-ui, sans-serif;
+  --bk-font-mono: var(--font-geist-mono), "Geist Mono", ui-monospace, monospace;
+  --bk-text-page: 24px;         /* 600, -0.025em — page title */
+  --bk-text-section: 22px;      /* 600, -0.02em — section heading */
+  --bk-text-card: 15px;         /* 600 — card title, control label */
+  --bk-text-body: 15px;         /* 400 */
+  --bk-text-support: 14px;      /* 400, --bk-ink-3 */
+  --bk-text-meta: 13px;         /* 400, --bk-ink-3 — chips, captions */
+  --bk-text-mono: 12px;         /* file names, hex, trees */
+  --bk-tracking-tight: -0.02em;
+  --bk-weight-strong: 600;      /* heaviest weight in the system */
+
+  /* Radii — generous; pills for anything interactive */
+  --bk-radius-card: 30px;
+  --bk-radius-tile: 22px;
+  --bk-radius-group: 26px;
+  --bk-radius-dialog: 34px;
+  --bk-radius-box: 9px;         /* checkbox */
+  --bk-radius-pill: 999px;
+
+  /* Padding — the "chunky" is here, not in strokes */
+  --bk-pad-card: 26px;
+  --bk-pad-group: 24px;
+  --bk-pad-tile: 24px;
+  --bk-pad-stage: 32px;         /* logo preview stage */
+  --bk-pad-canvas: 40px;
+  --bk-gap-section: 44px;
+  --bk-gap-card: 20px;
+  --bk-gap-row: 16px;
+  --bk-gap-tight: 10px;
+
+  /* Controls — every target ≥ 40px, primary actions 52–54px */
+  --bk-control-h: 48px;
+  --bk-control-h-lg: 54px;
+  --bk-icon-btn: 40px;
+  --bk-row-min: 48px;
+  --bk-switch-w: 56px;
+  --bk-switch-h: 32px;
+
+  /* Elevation — only dialogs and printed paper cast shadows */
+  --bk-shadow-input: 0 1px 2px rgba(0, 0, 0, 0.06);
+  --bk-shadow-knob: 0 1px 3px rgba(0, 0, 0, 0.2);
+  --bk-shadow-paper: 0 2px 8px rgba(0, 0, 0, 0.06), 0 24px 60px rgba(0, 0, 0, 0.08);
+  --bk-shadow-dialog: 0 30px 80px rgba(0, 0, 0, 0.22);
+  --bk-scrim: rgba(10, 10, 10, 0.32);
+
+  /* Motion + focus */
+  --bk-transition: 140ms ease;
+  --bk-focus-ring: 2px solid #0A0A0A;
+  --bk-focus-offset: 3px;
+}
+
+/* Global behaviours the system depends on (cannot live inline) */
+button,
+input { font-family: inherit; }
+button:hover:not(:disabled):not([aria-disabled="true"]) {
+  filter: brightness(0.96);
+}
+button:active:not(:disabled):not([aria-disabled="true"]) {
+  transform: translateY(1px);
+}
+:focus-visible {
+  outline: var(--bk-focus-ring);
+  outline-offset: var(--bk-focus-offset);
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
