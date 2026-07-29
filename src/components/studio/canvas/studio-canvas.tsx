@@ -22,7 +22,6 @@ import {
   shadeHex,
   tintHex,
 } from "@/lib/color";
-import { parseSvg, recolorSvg, serializeSvg } from "@/lib/svg";
 import { cn } from "@/lib/utils";
 import { useProjectStore } from "@/store/project-store";
 import {
@@ -99,28 +98,11 @@ export function StudioCanvas() {
     horizontal || vertical || icon || wordmark || submark || monogram,
   );
   const composeFromParts = assetMode === "build";
-  const uploadedAssetCount = [
-    horizontal,
-    vertical,
-    icon,
-    wordmark,
-    submark,
-    monogram,
-  ].filter(Boolean).length;
   const hasMainLockupSource = composeFromParts
     ? Boolean(icon && wordmark)
     : Boolean(horizontal || vertical);
   const buildMissingParts =
     composeFromParts && Boolean(icon || wordmark) && !(icon && wordmark);
-
-  const wordmarkPreview = useMemo(() => {
-    if (!wordmark?.raw) return null;
-    try {
-      return serializeSvg(recolorSvg(parseSvg(wordmark.raw), "#0A0A0A"));
-    } catch {
-      return wordmark.raw;
-    }
-  }, [wordmark?.raw]);
 
   const scrollRootRef = useRef<HTMLDivElement>(null);
   const colorsSectionRef = useRef<HTMLElement>(null);
@@ -213,36 +195,6 @@ export function StudioCanvas() {
 
   return (
     <div className="relative flex h-full flex-col overflow-hidden bg-[var(--bk-field)]">
-      <header className="relative z-20 flex h-[80px] shrink-0 items-center justify-between border-b border-[var(--bk-hairline)] bg-[var(--bk-card)] px-6 sm:px-10">
-        <div className="min-w-0 leading-none">
-          <p className="m-0 text-[13px] leading-none text-[var(--bk-ink-3)]">
-            Preview
-          </p>
-          {wordmarkPreview ? (
-            <div
-              className="mt-0.5 flex h-8 max-w-[min(280px,50vw)] items-center"
-              aria-label={displayName}
-            >
-              <SvgPreview
-                svg={wordmarkPreview}
-                align="start"
-                className="h-full w-full [&_svg]:h-full [&_svg]:w-auto [&_svg]:max-w-full"
-              />
-            </div>
-          ) : (
-            <p className="m-0 mt-0.5 text-[22px] font-semibold leading-none tracking-[-0.02em] text-[var(--bk-ink)]">
-              {displayName}
-            </p>
-          )}
-        </div>
-        <span className="bk-chip">
-          {uploadedAssetCount} upload{uploadedAssetCount === 1 ? "" : "s"}
-          {previews.length > 0
-            ? ` · ${previews.length} preview${previews.length === 1 ? "" : "s"}`
-            : ""}
-        </span>
-      </header>
-
       <AnimatePresence initial={false}>
         {showStickyColors && hasAssets ? (
           <motion.div
