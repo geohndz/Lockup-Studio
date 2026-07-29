@@ -4,9 +4,14 @@ import { useEffect, useRef, useState } from "react";
 import { SvgDropzone } from "@/components/studio/sidebar/svg-dropzone";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { analytics } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 import { useProjectStore } from "@/store/project-store";
-import { ASSET_MODE_LABELS, type AssetMode } from "@/types/project";
+import {
+  ASSET_MODE_LABELS,
+  type AssetMode,
+  type LockupType,
+} from "@/types/project";
 
 function Section({
   title,
@@ -82,6 +87,22 @@ export function StudioSidebar() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [showBottomFade, setShowBottomFade] = useState(false);
 
+  function changeAssetMode(mode: AssetMode) {
+    if (mode === assetMode) return;
+    setAssetMode(mode);
+    analytics.selectAssetMode(mode);
+  }
+
+  function handleUpload(
+    lockup: LockupType,
+    setAsset: (asset: { raw: string; fileName: string }) => void,
+  ) {
+    return (raw: string, fileName: string) => {
+      setAsset({ raw, fileName });
+      analytics.uploadSvg(lockup);
+    };
+  }
+
   useEffect(() => {
     const el = scrollRef.current;
     if (!el) return;
@@ -149,7 +170,7 @@ export function StudioSidebar() {
         >
           <Section>
             <div className="space-y-4">
-              <AssetModeToggle value={assetMode} onChange={setAssetMode} />
+              <AssetModeToggle value={assetMode} onChange={changeAssetMode} />
               <div className="flex flex-col gap-6">
                 <p className="m-0 text-center text-[13px] leading-relaxed text-[var(--bk-ink-3)]">
                   {isBuild
@@ -163,7 +184,7 @@ export function StudioSidebar() {
                     <button
                       type="button"
                       className="cursor-pointer font-semibold text-sky-950 underline underline-offset-2"
-                      onClick={() => setAssetMode("build")}
+                      onClick={() => changeAssetMode("build")}
                     >
                       Switch to Build
                     </button>{" "}
@@ -177,7 +198,7 @@ export function StudioSidebar() {
                     <button
                       type="button"
                       className="cursor-pointer font-semibold text-sky-950 underline underline-offset-2"
-                      onClick={() => setAssetMode("upload")}
+                      onClick={() => changeAssetMode("upload")}
                     >
                       Switch to Upload
                     </button>{" "}
@@ -192,7 +213,7 @@ export function StudioSidebar() {
                     <button
                       type="button"
                       className="cursor-pointer font-semibold text-sky-950 underline underline-offset-2"
-                      onClick={() => setAssetMode("upload")}
+                      onClick={() => changeAssetMode("upload")}
                     >
                       switch to Upload
                     </button>{" "}
@@ -209,7 +230,7 @@ export function StudioSidebar() {
                       description="Required — used in composed lockups"
                       fileName={icon?.fileName}
                       previewSvg={icon?.raw}
-                      onUpload={(raw, fileName) => setIcon({ raw, fileName })}
+                      onUpload={handleUpload("icon", setIcon)}
                       onClear={() => setIcon(null)}
                     />
                     <SvgDropzone
@@ -217,9 +238,7 @@ export function StudioSidebar() {
                       description="Required — used in composed lockups"
                       fileName={wordmark?.fileName}
                       previewSvg={wordmark?.raw}
-                      onUpload={(raw, fileName) =>
-                        setWordmark({ raw, fileName })
-                      }
+                      onUpload={handleUpload("wordmark", setWordmark)}
                       onClear={() => setWordmark(null)}
                     />
                     <div className="rounded-[var(--bk-radius-tile)] bg-[var(--bk-tile)] px-4 py-4">
@@ -239,9 +258,7 @@ export function StudioSidebar() {
                       description="Full vertical lockup SVG"
                       fileName={vertical?.fileName}
                       previewSvg={vertical?.raw}
-                      onUpload={(raw, fileName) =>
-                        setVertical({ raw, fileName })
-                      }
+                      onUpload={handleUpload("vertical", setVertical)}
                       onClear={() => setVertical(null)}
                     />
                     <SvgDropzone
@@ -249,9 +266,7 @@ export function StudioSidebar() {
                       description="Full horizontal lockup SVG"
                       fileName={horizontal?.fileName}
                       previewSvg={horizontal?.raw}
-                      onUpload={(raw, fileName) =>
-                        setHorizontal({ raw, fileName })
-                      }
+                      onUpload={handleUpload("horizontal", setHorizontal)}
                       onClear={() => setHorizontal(null)}
                     />
                     <SvgDropzone
@@ -259,7 +274,7 @@ export function StudioSidebar() {
                       description="Standalone icon mark"
                       fileName={icon?.fileName}
                       previewSvg={icon?.raw}
-                      onUpload={(raw, fileName) => setIcon({ raw, fileName })}
+                      onUpload={handleUpload("icon", setIcon)}
                       onClear={() => setIcon(null)}
                     />
                     <SvgDropzone
@@ -267,9 +282,7 @@ export function StudioSidebar() {
                       description="Standalone wordmark"
                       fileName={wordmark?.fileName}
                       previewSvg={wordmark?.raw}
-                      onUpload={(raw, fileName) =>
-                        setWordmark({ raw, fileName })
-                      }
+                      onUpload={handleUpload("wordmark", setWordmark)}
                       onClear={() => setWordmark(null)}
                     />
                   </>
@@ -287,7 +300,7 @@ export function StudioSidebar() {
                 description="Optional alternate mark"
                 fileName={submark?.fileName}
                 previewSvg={submark?.raw}
-                onUpload={(raw, fileName) => setSubmark({ raw, fileName })}
+                onUpload={handleUpload("submark", setSubmark)}
                 onClear={() => setSubmark(null)}
               />
               <SvgDropzone
@@ -295,7 +308,7 @@ export function StudioSidebar() {
                 description="Optional letterform mark"
                 fileName={monogram?.fileName}
                 previewSvg={monogram?.raw}
-                onUpload={(raw, fileName) => setMonogram({ raw, fileName })}
+                onUpload={handleUpload("monogram", setMonogram)}
                 onClear={() => setMonogram(null)}
               />
             </div>

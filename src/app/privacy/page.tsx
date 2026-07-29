@@ -97,6 +97,24 @@ export default function PrivacyPage() {
               The Feedback button opens a Google Form you choose. Anything you
               submit there is governed by Google’s terms and that form’s settings.
             </li>
+            <li>
+              <strong className="font-semibold text-[var(--bk-ink)]">
+                Analytics.
+              </strong>{" "}
+              We use Google Analytics to understand aggregate traffic (pages
+              visited, approximate location, device type). Logo files and brand
+              settings are not sent to Analytics. Google may set cookies or use
+              similar identifiers under{" "}
+              <a
+                href="https://policies.google.com/privacy"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-medium text-[var(--bk-ink)] underline underline-offset-2 hover:opacity-80"
+              >
+                Google’s Privacy Policy
+              </a>
+              .
+            </li>
           </ul>
         </section>
 

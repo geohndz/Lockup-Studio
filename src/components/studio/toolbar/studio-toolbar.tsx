@@ -26,6 +26,7 @@ import {
   formatByteEstimate,
   type PackageFolderEntry,
 } from "@/lib/export/package-summary";
+import { analytics } from "@/lib/analytics";
 import { lockupHasSource } from "@/lib/lockups";
 import { cn } from "@/lib/utils";
 import { useHasMultiColorAssets } from "@/hooks/use-live-previews";
@@ -279,12 +280,14 @@ export function StudioToolbar() {
         setLockup(lockup, false);
       }
     }
+    analytics.openExport(assetMode);
     setOpen(true);
   }
 
   async function copyShareLink() {
     try {
       await navigator.clipboard.writeText(getShareUrl());
+      analytics.share("copy");
       setShareCopied(true);
       window.setTimeout(() => {
         setShareCopied(false);
@@ -309,6 +312,7 @@ export function StudioToolbar() {
             : network === "threads"
               ? `https://www.threads.net/intent/post?text=${encodeURIComponent(`${SHARE_TEXT} ${url}`)}`
               : `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`;
+    analytics.share(network);
     openShareWindow(href);
     setShareOpen(false);
   }
@@ -334,9 +338,22 @@ export function StudioToolbar() {
         exportSettings,
         onProgress: (message) => setGenerating(true, message),
       });
+      analytics.generatePackage({
+        assetMode,
+        fileCount: summary.totalFiles,
+        lockupCount: LOCKUP_ORDER.filter(
+          (lockup) => lockups[lockup] && lockupHasSource(lockup, assets),
+        ).length,
+        colorCount: summary.colorCount,
+        svg: exportSettings.svg,
+        png: exportSettings.png,
+        brandsheet: exportSettings.brandsheet,
+      });
       setOpen(false);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Export failed");
+      const message = err instanceof Error ? err.message : "Export failed";
+      analytics.generatePackageFailed(message);
+      setError(message);
     } finally {
       setGenerating(false, null);
     }

@@ -3,6 +3,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { Pause, Play, Sparkles } from "lucide-react";
+import { analytics } from "@/lib/analytics";
 import { loadExampleBrand } from "@/lib/example-brand";
 import { cn } from "@/lib/utils";
 
@@ -88,6 +89,7 @@ export function EmptyStateCarousel({
     setExampleLoading(true);
     try {
       await loadExampleBrand();
+      analytics.tryExample();
     } catch {
       setExampleError("Couldn’t load the example. Try again.");
     } finally {

@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { Geist_Mono } from "next/font/google";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import { FeedbackButton } from "@/components/feedback-button";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import "./globals.css";
+
+const GA_MEASUREMENT_ID = "G-CQHLGC1SG7";
 
 const helvena = localFont({
   src: [
@@ -96,6 +99,7 @@ export default function RootLayout({
           {children}
           <FeedbackButton />
         </TooltipProvider>
+        <GoogleAnalytics gaId={GA_MEASUREMENT_ID} />
       </body>
     </html>
   );
