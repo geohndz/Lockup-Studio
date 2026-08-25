@@ -1,6 +1,8 @@
-# Lockup
+# Lockup Studio
 
 Local-first logo lockup packaging for designers. Upload SVG lockups—or build them from icon and wordmark—configure colors and spacing, preview in context, then export a client-ready ZIP—entirely in the browser.
+
+Live: [lockup-studio-tau.vercel.app](https://lockup-studio-tau.vercel.app)
 
 ## Getting Started
 
